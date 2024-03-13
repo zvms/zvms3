@@ -3,7 +3,8 @@ from datetime import date
 from flask import (
     Blueprint,
     render_template,
-    redirect
+    redirect,
+    request
 )
 
 from ..util import (
@@ -92,9 +93,17 @@ def edit_notices_post(noticeid: int, title: str, content: str, targets: list[str
     return redirect('/management/edit-notices')
 
 
-@zvms_route(Management, url.delete_notice)
+@zvms_route(Management, url.delete_notice, 'POST')
 @login_required
 @permission(Permission.MANAGER)
 def delete_notice(noticeid: int):
     NoticeKernel.delete_notice(noticeid)
     return redirect('/management/edit-notices')
+
+
+@zvms_route(Management, url.issue.clear)
+@login_required
+@permission(Permission.ADMIN)
+def clear_issues():
+    IssueKernel.clear_issues()
+    return redirect(request.referrer)

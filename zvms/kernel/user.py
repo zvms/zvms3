@@ -44,19 +44,15 @@ def modify_password(target: int, old: str, new: str) -> None:
     if target != int(session.get('userid')) and not manager:
         raise ZvmsError(ErrorCode.NOT_AUTHORIZED)
     match execute_sql(
-        'SELECT permission FROM user WHERE userid = :userid',
+        'SELECT permission, password FROM user WHERE userid = :userid',
         userid=target
     ).fetchone():
         case None:
             raise ZvmsError(ErrorCode.USER_NOT_EXISTS, {'userid': target})
-        case [perm] if perm & Permission.ADMIN and target != int(session.get('userid')):
+        case [perm, _] if perm & Permission.ADMIN and target != int(session.get('userid')):
             raise ZvmsError(ErrorCode.NOT_AUTHORIZED)
-    if not manager and execute_sql(
-        'SELECT * FROM user WHERE userid = :userid AND password = :password',
-        userid=target,
-        password=old
-    ):
-        raise ZvmsError(ErrorCode.INCORRECT_OLD_PASSWORD)
+        case [_, pwd] if pwd != old and not manager:
+            raise ZvmsError(ErrorCode.INCORRECT_OLD_PASSWORD)
     execute_sql(
         'UPDATE user '
         'SET password = :password '

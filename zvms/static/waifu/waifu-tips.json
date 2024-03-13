@@ -1,0 +1,102 @@
+{
+    "waifu": {
+        "console_open_msg": ["哈哈，你打开了控制台，是想要看看我的秘密吗？"],
+        "copy_message": ["你都复制了些什么呀，转载要记得加上出处哦"],
+        "screenshot_message": ["照好了嘛，是不是很可爱呢？"],
+        "hidden_message": ["我们还能再见面的吧…"],
+        "load_rand_textures": ["我还没有其他衣服呢", "我的新衣服好看嘛"],
+        "hour_tips": {
+            "t5-7": ["早上好！一日之计在于晨，美好的一天就要开始了"],
+            "t7-11": ["上午好！工作顺利嘛，不要久坐，多起来走动走动哦！"],
+            "t11-14": ["中午了，工作了一个上午，现在是午餐时间！"],
+            "t14-17": ["午后很容易犯困呢，今天的运动目标完成了吗？"],
+            "t17-19": ["傍晚了！窗外夕阳的景色很美丽呢，最美不过夕阳红~"],
+            "t19-21": ["晚上好，今天过得怎么样？"],
+            "t21-23": ["已经这么晚了呀，早点休息吧，晚安~"],
+            "t23-5": ["你是夜猫子呀？这么晚还不睡觉，明天起的来嘛"],
+            "default": ["嗨~ 快来逗我玩吧！"]
+        },
+        "model_message": {},
+        "referrer_message": {
+            "localhost": ["欢迎访问<span style=\"color:#0099cc;\">『", "』</span>", " - "],
+            "default": ["Hello! 来自 <span style=\"color:#0099cc;\">", "</span> 的朋友"]
+        },
+        "hitokoto_api_message": {
+            "lwl12.com": ["这句一言来自 <span style=\"color:#0099cc;\">『{source}』</span>", "，是 <span style=\"color:#0099cc;\">{creator}</span> 投稿的", "。"],
+            "fghrsh.net": ["这句一言出处是 <span style=\"color:#0099cc;\">『{source}』</span>，是 <span style=\"color:#0099cc;\">FGHRSH</span> 在 {date} 收藏的！"],
+            "jinrishici.com": ["这句诗词出自 <span style=\"color:#0099cc;\">《{title}》</span>，是 {dynasty}诗人 {author} 创作的！"],
+            "hitokoto.cn": ["这句一言来自 <span style=\"color:#0099cc;\">『{source}』</span>，是 <span style=\"color:#0099cc;\">{creator}</span> 在 hitokoto.cn 投稿的。"]
+        }
+    },
+    "mouseover": [
+        { "selector": ".fui-home", "text": ["点击前往首页，想回到上一页可以使用浏览器的后退功能哦"] },
+        { "selector": ".fui-chat", "text": ["嗯! 嗯! "] },
+        { "selector": ".fui-eye", "text": ["嗯··· 要切换 看板娘 吗？"] },
+        { "selector": ".fui-user", "text": ["喜欢换装 Play 吗？"] },
+        { "selector": ".fui-photo", "text": ["要拍张纪念照片吗？"] },
+        { "selector": ".fui-info-circle", "text": ["这里有关于我的信息呢"] },
+        { "selector": ".fui-cross", "text": ["你不喜欢我了吗..."] },
+        { "selector": ".waifu #live2d", "text": ["干嘛呢你，快把手拿开", "鼠…鼠标放错地方了！"] },
+        { "selector": "textarea#content", "text": ["你要去哪里呢?", "port:5244"] },
+        { "selector": "button[data-bs-target=\"#notice-tab-pane\"]", "text": ["你要离开我了吗?"] }
+    ],
+    "click": [
+        {
+            "selector": ".waifu #live2d",
+            "text": [
+                "Monad是自函子范畴上的一个Monoid",
+                "PHP是世界上最好的语言",
+                "你说得对, 但『...",
+                "我没有代码洁癖",
+                "printfn \"Hello, World!\"",
+                "(display 'hello-world)",
+                "Console.WriteLine(\"Hello, World!\")",
+                "print('hello, world')",
+                "console.log('hello, world')",
+                "JavaScript是Java的一种方言",
+                "编程语言经历了长时间的演化, 面向对象是目前最先进的编程语言",
+                "C#是和Java差不多的语言, C#程序在Java中一般都能编译",
+                "private关键字能使方法私有, 一般不需要",
+                "现代编程语言各有千秋, 比如VB擅长做界面, Pascal擅长写算法",
+                "C++是C的改进, C#是C++的升级",
+                "指针是C语言中比较难的部分, 一般很少用到",
+                "VC++6.0是微软公司推出的C++最新版本",
+                "如果你的代码编译不了, 就把后缀名从.c改成.cpp",
+                "C++11不一定受到编译器支持, 所以我们一般用C++98",
+                "我们用的Python是高级语言, 而C语言等是低级语言",
+                "如果看不懂的话, 编译器警告可以忽略",
+                "def judge(shuzu):",
+                "if flag==True:",
+                "Python是编译-解释混合型语言, 你可以在IDLE里编译程序, 再在PyShell里解释",
+                "Python不支持指针, 所以我们可以用数组来模拟链表",
+                "Python是逐行解释的",
+                "Python里关键字不能用作变量名, 比如print和input",
+                "和其他语言不同, Python是没有类型的",
+                "引用全局变量前要加上global",
+                "变量就是用来变的, 不赋值的变量有什么用",
+                "df.append在Python3.8版本已取消",
+                "Python里传参分为值传递和引用传递, 比如str就是传值",
+                "实践证明, 英文写的代码过久了都是会忘的, 中文则没有这个缺点",
+                "(中文编程)在特定条件下, 政府可以进行检查, 或改造编译器为我所用",
+                "西方国家对东方国家的高科技(代码)都是封锁的, 欧洲国家却可以轻易得到",
+                "ChatGPT这么厉害, 以后程序员都要失业",
+                "http和html是网址的两种, http用得多"
+            ]
+        }
+    ],
+    "seasons": [
+        { "date": "01/01", "text": ["<span style=\"color:#0099cc;\">元旦</span>了呢，新的一年又开始了，今年是{year}年~"] },
+        { "date": "02/14", "text": ["又是一年<span style=\"color:#0099cc;\">情人节</span>，{year}年找到对象了嘛~"] },
+        { "date": "03/08", "text": ["今天是<span style=\"color:#0099cc;\">妇女节</span>！"] },
+        { "date": "03/12", "text": ["今天是<span style=\"color:#0099cc;\">植树节</span>，要保护环境呀"] },
+        { "date": "04/01", "text": ["悄悄告诉你一个秘密~<span style=\"background-color:#34495e;\">今天是愚人节，不要被骗了哦~</span>"] },
+        { "date": "04/12", "text": ["Happy F# Day!"] },
+        { "date": "05/01", "text": ["今天是<span style=\"color:#0099cc;\">五一劳动节</span>，计划好假期去哪里了吗~"] },
+        { "date": "06/01", "text": ["<span style=\"color:#0099cc;\">儿童节</span>了呢，快活的时光总是短暂，要是永远长不大该多好啊…"] },
+        { "date": "09/03", "text": ["<span style=\"color:#0099cc;\">中国人民抗日战争胜利纪念日</span>，铭记历史、缅怀先烈、珍爱和平、开创未来。"] },
+        { "date": "09/10", "text": ["<span style=\"color:#0099cc;\">教师节</span>，在学校要给老师问声好呀~"] },
+        { "date": "10/01", "text": ["<span style=\"color:#0099cc;\">国庆节</span>，新中国已经成立69年了呢"] },
+        { "date": "11/05-11/12", "text": ["今年的<span style=\"color:#0099cc;\">双十一</span>是和谁一起过的呢~"] },
+        { "date": "12/20-12/31", "text": ["这几天是<span style=\"color:#0099cc;\">圣诞节</span>，主人肯定又去剁手买买买了~"] }
+    ]
+}

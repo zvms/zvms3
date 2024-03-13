@@ -1,81 +1,140 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="/static/css/index.css">
-    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.staticfile.org/twitter-bootstrap/5.3.1/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.staticfile.org/bootstrap-icons/1.11.0/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="/static/css/index.css" />
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
     <script src="/static/js/index.js"></script>
-</head>
+    {% if not Permission.ADMIN.authorized(_permission) %}
+    <script type="text/javascript">
+      (function (c, l, a, r, i, t, y) {
+        c[a] =
+          c[a] ||
+          function () {
+            (c[a].q = c[a].q || []).push(arguments);
+          };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+      })(window, document, "clarity", "script", "k9cymfsfsb");
+    </script>
+    {% endif %}
+  </head>
 
-<body class="{% block body_style %}{% endblock %}">
+  <body class="{% block body_style %}{% endblock %}">
     {% block nav %}{% endblock %}
     <div class="container">
-        {% block container %}{% endblock %}
-        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top ">
-            <div class="col-md-4 d-flex align-items-center">
-                <span class="mb-3 mb-md-0 text-body-secondary copyright">© {{_year}} 义工自管委员会</span>
-            </div>
-        </footer>
+      {% block container %}{% endblock %}
+      <footer
+        class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top"
+      >
+        <div class="col-md-4 d-flex align-items-center">
+          <span class="mb-3 mb-md-0 text-body-secondary copyright"
+            >© {{_year}} 义工自管委员会</span
+          >
+        </div>
+      </footer>
     </div>
-    <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
-        <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button"
-            aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (dark)">
-            <span class="bi my-1 theme-icon-active" width="1em" height="1em">
-                <i class="bi"></i>
-            </span>
-            <span class="visually-hidden" id="bd-theme-text">颜色主题</span>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
-            <li>
-                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light"
-                    aria-pressed="false">
-                    <i class="bi bi-sun-fill"></i>
-                    Light
-                </button>
-            </li>
-            <li>
-                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark"
-                    aria-pressed="false">
-                    <i class="bi bi-moon-stars-fill"></i>
-                    Dark
-                </button>
-            </li>
-            <li>
-                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="blue"
-                    aria-pressed="false">
-                    <i class="bi bi-steam"></i>
-                    Blue
-                </button>
-            </li>
-            <li>
-                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="O"
-                    aria-pressed="false">
-                    <i class="bi bi-sign-no-parking-fill"></i>
-                    O
-                </button>
-            </li>
-            <li>
-                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="P"
-                    aria-pressed="false">
-                    <i class="bi bi-filetype-php"></i>
-                    P
-                </button>
-            </li>
-            <li>
-                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto"
-                    aria-pressed="false">
-                    <i class="bi bi-circle-half"></i>
-                    自动
-                </button>
-            </li>
-        </ul>
+    <div
+      class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle"
+    >
+      <button
+        class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center"
+        id="bd-theme"
+        type="button"
+        aria-expanded="false"
+        data-bs-toggle="dropdown"
+        aria-label="Toggle theme (dark)"
+      >
+        <span class="bi my-1 theme-icon-active" width="1em" height="1em">
+          <i class="bi"></i>
+        </span>
+        <span class="visually-hidden" id="bd-theme-text">颜色主题</span>
+      </button>
+      <ul
+        class="dropdown-menu dropdown-menu-end shadow"
+        aria-labelledby="bd-theme-text"
+      >
+        <li>
+          <button
+            type="button"
+            class="dropdown-item d-flex align-items-center"
+            data-bs-theme-value="light"
+            aria-pressed="false"
+          >
+            <i class="bi bi-sun-fill"></i>
+            Light
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            class="dropdown-item d-flex align-items-center"
+            data-bs-theme-value="dark"
+            aria-pressed="false"
+          >
+            <i class="bi bi-moon-stars-fill"></i>
+            Dark
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            class="dropdown-item d-flex align-items-center"
+            data-bs-theme-value="blue"
+            aria-pressed="false"
+          >
+            <i class="bi bi-steam"></i>
+            Blue
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            class="dropdown-item d-flex align-items-center"
+            data-bs-theme-value="O"
+            aria-pressed="false"
+          >
+            <i class="bi bi-sign-no-parking-fill"></i>
+            O
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            class="dropdown-item d-flex align-items-center"
+            data-bs-theme-value="P"
+            aria-pressed="false"
+          >
+            <i class="bi bi-filetype-php"></i>
+            P
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            class="dropdown-item d-flex align-items-center"
+            data-bs-theme-value="auto"
+            aria-pressed="false"
+          >
+            <i class="bi bi-circle-half"></i>
+            自动
+          </button>
+        </li>
+      </ul>
     </div>
-</body>
-
+  </body>
 </html>

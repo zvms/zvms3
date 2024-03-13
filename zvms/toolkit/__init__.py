@@ -46,7 +46,7 @@ try:
                 `translation` TEXT
                 )
                 '''
-        connection = sqlite3.connect(':memory:')
+        connection = sqlite3.connect(':memory:', check_same_thread=False)
         cursor = connection.cursor()
         cursor.execute(sql)
         reader = iter(csv.reader(f))
@@ -193,11 +193,12 @@ def management_post():
         case {'action': 'search-music', 'keyword': keyword}:
             data = json.loads(
                 get_with_timeout(
-                    f'https://tonzhon.com/api/fuzzy_search?keyword={keyword}'
+                    f'https://music-api.tonzhon.com/search/n/{keyword}'
                 ).text
-            )['songs']
+            )['data']['songs']
             for datum in data:
-                datum['url'] = json.loads(get_with_timeout('https://music-api.tonzhon.com/song_file/' + datum['newId']).text)['data']
+                datum['url'] = json.loads(get_with_timeout(
+                    'https://music-api.tonzhon.com/song_file/' + datum['newId']).text)['data']
             return render_template('toolkit/music_search.html', data=data)
         case {'action': 'close-music'}:
             settings['music'] = None

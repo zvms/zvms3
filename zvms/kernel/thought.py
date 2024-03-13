@@ -104,7 +104,7 @@ def thought_info(volid: int, userid: int) -> tuple[
             abort(404)
         case [username, classid, *spam]: ...
     if userid != int(session.get('userid')) and not (
-        (Permission.CLASS.authorized() and classid != int(session.get('classid'))) or
+        (Permission.CLASS.authorized() and classid == int(session.get('classid'))) or
         (Permission.MANAGER | Permission.AUDITOR).authorized()
     ):
         raise ZvmsError(ErrorCode.NOT_AUTHORIZED)
@@ -179,34 +179,43 @@ def edit_thought(
             abort(404)
         case [ThoughtStatus.DRAFT |
               ThoughtStatus.WAITING_FOR_FIRST_AUDIT |
-              ThoughtStatus.WAITING_FOR_FINAL_AUDIT] if not submit: ...
-        case [ThoughtStatus.DRAFT] if submit: ...
+              ThoughtStatus.WAITING_FOR_FINAL_AUDIT |
+              ThoughtStatus.SPIKE] if not submit: ...
+        case [ThoughtStatus.DRAFT | ThoughtStatus.SPIKE] if submit: ...
         case _:
             raise ZvmsError(ErrorCode.THOUGHT_NOT_EDITABLE)
-    execute_sql(
-        'DELETE FROM picture WHERE volid = :volid AND userid = :userid',
+    existing_pictures = execute_sql(
+        'SELECT filename FROM picture WHERE volid = :volid AND userid = :userid',
         volid=volid,
         userid=userid
-    )
-    for filename in pictures:
-        if execute_sql(
-            'SELECT COUNT(*) FROM picture WHERE volid = :volid AND filename = :filename',
-            volid=volid,
-            filename=filename
-        ).fetchone()[0] == 0:
-            raise ZvmsError(ErrorCode.PICTURE_NOT_EXISTS,
-                            {'filename': filename})
+    ).scalars()
+    for filename in set(existing_pictures) - set(pictures):
         execute_sql(
-            'INSERT INTO picture(volid, userid, filename) '
-            'VALUES(:volid, :userid, :filename)',
-            volid=volid,
+            'DELETE FROM picture WHERE userid = :userid AND filename = :filename',
             userid=userid,
             filename=filename
         )
+    for filename in pictures:
+        match execute_sql(
+            'SELECT userid FROM picture WHERE volid = :volid AND filename = :filename',
+            volid=volid,
+            filename=filename
+        ).scalars():
+            case []:
+                raise ZvmsError(ErrorCode.PICTURE_NOT_EXISTS,
+                                {'filename': filename})
+            case picture_owners if int(session.get('userid')) not in picture_owners:
+                execute_sql(
+                    'INSERT INTO picture(volid, userid, filename) '
+                    'VALUES(:volid, :userid, :filename)',
+                    volid=volid,
+                    userid=userid,
+                    filename=filename
+                )
     for filename, data in files:
         try:
             data.decode()
-        except UnicodeEncodeError: ...
+        except UnicodeDecodeError: ...
         else:
             raise ZvmsError(ErrorCode.INVALID_IMAGE_FILE)
         ext = filename.split('.')[-1]
@@ -242,7 +251,7 @@ def edit_thought(
             'UPDATE user_vol SET thought = :thought, status = :status '
             'WHERE userid = :userid AND volid = :volid',
             thought=thought,
-            status=ThoughtStatus.WAITING_FOR_FIRST_AUDIT,
+            status=ThoughtStatus.ACCEPTED if (Permission.AUDITOR | Permission.MANAGER).authorized() else ThoughtStatus.WAITING_FOR_FIRST_AUDIT,
             userid=userid,
             volid=volid
         )
@@ -290,8 +299,8 @@ def _test_final(volid: int, userid: int) -> None:
     ).fetchone():
         case None:
             abort(404)
-        case [ThoughtStatus.WAITING_FOR_FINAL_AUDIT, VolType.OUTSIDE] if Permission.MANAGER.authorized(): ...
-        case [ThoughtStatus.WAITING_FOR_FINAL_AUDIT, VolType.INSIDE] if Permission.AUDITOR.authorized(): ...
+        case [ThoughtStatus.WAITING_FOR_FINAL_AUDIT, VolType.INSIDE] if Permission.MANAGER.authorized(): ...
+        case [ThoughtStatus.WAITING_FOR_FINAL_AUDIT, VolType.OUTSIDE] if Permission.AUDITOR.authorized(): ...
         case _:
             raise ZvmsError(ErrorCode.THOUGHT_NOT_AUDITABLE)
 

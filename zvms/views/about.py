@@ -20,13 +20,13 @@ About = Blueprint('About', __name__)
 @zvms_route(About, url.about, 'GET')
 def index():
     issues_posted = None
-    issues_today = 0
+    issues_thisweek = 0
     if 'userid' in session:
-        issues_today, issues_posted = IssueKernel.my_issues()
+        issues_thisweek, issues_posted = IssueKernel.my_issues()
     return render_template(
         'zvms/about.html',
         issues_posted=issues_posted,
-        issues_today=issues_today,
+        issues_thisweek=issues_thisweek,
         random_color=random_color
     )
 

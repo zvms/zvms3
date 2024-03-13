@@ -25,6 +25,7 @@ class Permission(IntFlag):
     AUDITOR = 4
     INSPECTOR = 8
     ADMIN = 16
+    FAKE_ADMIN = 32
 
     def __str__(self) -> str:
         ret = []
@@ -32,7 +33,7 @@ class Permission(IntFlag):
             if self & value:
                 ret.append(name)
                 self -= value
-        return ', '.join(ret)
+        return ' '.join(ret)
 
     def authorized(self, /, that=_empty, *, admin: bool = True) -> bool:
         if that is _empty:
@@ -47,7 +48,8 @@ permission2str = {
     Permission.MANAGER: '管理员',
     Permission.AUDITOR: '审计员',
     Permission.INSPECTOR: '督察员',
-    Permission.ADMIN: 'Administrator'
+    Permission.ADMIN: '',
+    Permission.FAKE_ADMIN: 'Administrator'
 }
 
 

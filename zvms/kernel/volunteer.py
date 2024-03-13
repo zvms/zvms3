@@ -129,11 +129,12 @@ def volunteer_info(volid: int) -> tuple[
     int,  # 义工时间
     str,  # 报名时间
     bool,  # 可否报名
+    bool,  # 可否审核
     list[tuple[int, str, bool]],  # 参加者
     list[tuple[int, str]]  # 报名者
 ]:
     match execute_sql(
-        'SELECT vol.name, vol.description, vol.status, vol.holder, user.username, vol.type, vol.reward, vol.time '
+        'SELECT vol.name, vol.description, vol.status, vol.holder, user.username, vol.type, vol.reward, vol.time, user.classid '
         'FROM volunteer AS vol '
         'JOIN user ON user.userid = vol.holder '
         'WHERE vol.id = :volid',
@@ -141,7 +142,7 @@ def volunteer_info(volid: int) -> tuple[
     ).fetchone():
         case None:
             abort(404)
-        case vol_info: ...
+        case [*vol_info, holder_classid]: ...
     participants = execute_sql(
         'SELECT uv.userid, user.username, uv.userid = :userid OR :can_view_thoughts OR (:can_view_class_thoughts AND user.classid = :classid)'
         'FROM user_vol AS uv '
@@ -155,15 +156,17 @@ def volunteer_info(volid: int) -> tuple[
         classid=session.get('classid')
     ).fetchall()
     signups = []
-    if Permission.CLASS.authorized():
+    if Permission.CLASS.authorized() and vol_info[2] == VolStatus.ACCEPTED:
         signups = execute_sql(
             'SELECT uv.userid, user.username '
             'FROM user_vol AS uv '
             'JOIN user ON user.userid = uv.userid '
-            'WHERE uv.volid = :volid AND uv.status = 1 ',
-            volid=volid
+            'WHERE uv.volid = :volid AND uv.status = 1 AND user.classid = :classid ',
+            volid=volid,
+            classid=int(session.get('classid'))
         ).fetchall()
-    return *vol_info, _can_signup(volid), participants, signups
+    can_audit = vol_info[2] == VolStatus.UNAUDITED and Permission.CLASS.authorized() and holder_classid == int(session.get('classid'))
+    return *vol_info, can_audit,_can_signup(volid), participants, signups
 
 
 def _volunteer_helper_pre(classes: Classes) -> None:
@@ -202,8 +205,7 @@ def create_volunteer(
         name=name,
         description=description,
         type=VolType.INSIDE,
-        status=VolStatus.ACCEPTED if (
-            Permission.CLASS | Permission.MANAGER).authorized() else VolStatus.UNAUDITED,
+        status=VolStatus.ACCEPTED,
         holder=session.get('userid'),
         reward=reward,
         time=time
@@ -231,7 +233,7 @@ def create_appointed_volunteer(
     status = VolStatus.UNAUDITED
     thought_status = ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT
     to_send_notice = False
-    if (Permission.CLASS | Permission.MANAGER).authorized():
+    if (Permission.CLASS | Permission.MANAGER | Permission.AUDITOR).authorized():
         status = VolStatus.ACCEPTED
         thought_status = ThoughtStatus.DRAFT
     else:
@@ -250,10 +252,11 @@ def create_appointed_volunteer(
     for userid in userids:
         execute_sql(
             'INSERT INTO user_vol(userid, volid, status, thought, reward) '
-            'VALUES(:userid, :volid, :status, "", 0)',
+            'VALUES(:userid, :volid, :status, "", :reward)',
             userid=userid,
             volid=volid,
-            status=thought_status
+            status=thought_status,
+            reward=reward
         )
     if to_send_notice:
         match execute_sql(
@@ -673,8 +676,17 @@ def modify_appointed_volunteer(
     for added in userids - former_participants:
         execute_sql(
             'INSERT INTO user_vol(userid, volid, status, thought, reward) '
-            'VALUES(:userid, :volid, :status, "", 0)',
+            'VALUES(:userid, :volid, :status, "", :reward)',
             userid=added,
             volid=volid,
-            status=ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT if status == VolStatus.UNAUDITED else ThoughtStatus.DRAFT
+            status=ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT if status == VolStatus.UNAUDITED else ThoughtStatus.DRAFT,
+            reward=reward
+        )
+    for participant in former_participants:
+        execute_sql(
+            'UPDATE user_vol SET reward = :reward '
+            'WHERE userid = :userid AND volid = :volid',
+            reward=reward,
+            userid=participant,
+            volid=volid
         )

@@ -13,6 +13,8 @@
     <span class="f">M</span>anagement
     <span class="f">S</span>ystem
 </p>
+<img src="/favicon.ico">
+<hr>
 <h2>关于开发者</h2>
 <ul>
     <li><b>V4</b>由
@@ -20,6 +22,7 @@
         <span class="badge bg-{{random_color()}}">byh</span>
         <span class="badge bg-{{random_color()}}">zyq</span>
         <span class="badge bg-{{random_color()}}">clc</span>
+        <span class="badge bg-{{random_color()}}">zzh</span>
         正在开发中, <a href="#">https://github.com/zvms/zvms4-frontend</a></li>
     <li><b style="color: blue">V3</b>由
         <span class="badge bg-{{random_color()}}">qnc</span>
@@ -41,17 +44,23 @@
         开发, <a href="#">https://gitee.com/zvms/zvms-backend</a>, <a href="#">https://gitee.com/zvms/zvms-electron</a></li>
     <li><b>V0</b>由
         <span class="badge bg-{{random_color()}}">zzs</span>
-        开发, <a href="#">https://github.com/ZhangZisu/zvms</a><a href="#">https://github.com/ZhangZisu/zvms-frontend</a></li>
+        开发, <a href="#">https://github.com/ZhangZisu/zvms</a>, <a href="#">https://github.com/ZhangZisu/zvms-frontend</a></li>
 </ul>
 <p>特别感谢<span class="badge bg-{{random_color()}}">hhj</span>提供的服务器, <span class="badge bg-{{random_color()}}">zsz</span>绘制的新版图标和<span class="badge bg-{{random_color()}}">zjr</span>的疯狂测试.</p>
 <p style="font-size: 50px; color: red">注意: 校外访问上述github链接时请务必使用合法方式</p>
 <img src="https://img.shields.io/github/stars/zvmsbackend/zvms3?logo=github">
 {% if _login %}
-<form action="/issue" method="POST">
+<!--form action="/issue" method="POST">
     <textarea class="form-control" name="content" id="content" maxlength="64" rows="5" placeholder="反馈" required></textarea>
     <button class="btn btn-primary" type="submit" id="submit">提交反馈</button>
-</form>
-<p>你今天还能提交{{5 - issues_today}}条反馈</p>
+</form-->
+<p><del>你本周还能提交{{2 - issues_thisweek}}条反馈</del></p>
+<del>应政教处要求, 每周只能提交两次反馈. 真的有事的话:</del>
+<ol>
+    <li><del>如果是流程, 时间, 密码之类的问题, 咨询实践部干事, 或让本班团支书代为转达</del></li>
+    <li><del>如果是技术方面的问题, 可以让团支书和实践部干事传达, 也可以找高二九班邱念楚</del></li>
+</ol>
+<p>反馈系统因为某些不可抗力完全关闭, 详情请咨询蛟二三班楼瀚文同学</p><!--
 {% if issues_posted %}
 <h2>已提交的反馈</h2>
 <table class="table">
@@ -70,16 +79,6 @@
 </table>
 {% else %}
 你还没有提交过反馈
+{% endif %}-->
 {% endif %}
-{% endif %}
-<script>
-    const a = document.getElementById('a');
-    let counter = 0;
-    a.addEventListener('click', (e) => {
-        counter++;
-        if (counter == 19) {
-            a.setAttribute('href', '/toolkit');
-        }
-    });
-</script>
 {% endblock %}

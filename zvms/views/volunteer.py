@@ -73,7 +73,7 @@ def list_volunteers(page: int = 0):
     return select_volunteers(
         VolKernel.list_volunteers(page),
         page,
-        '/volunteer/list'
+        '/volunteer/list?'
     )
 
 
@@ -83,7 +83,7 @@ def my_volunteers(page: int = 0):
     return select_volunteers(
         VolKernel.my_volunteers(page),
         page,
-        '/volunteer/me'
+        '/volunteer/me?'
     )
 
 
@@ -99,6 +99,7 @@ def volunteer_info(volid: int):
         type,
         reward,
         time,
+        can_audit,
         can_signup,
         participants,
         signups
@@ -114,6 +115,7 @@ def volunteer_info(volid: int):
         type=VolType(type),
         reward=reward,
         time=time,
+        can_audit=can_audit,
         can_signup=can_signup,
         participants=participants,
         signups=signups
@@ -188,7 +190,7 @@ def audit_volunteer(
 
 @zvms_route(Volunteer, url.create.special, 'GET')
 @login_required
-@permission(Permission.MANAGER)
+@permission(Permission.MANAGER | Permission.AUDITOR)
 def create_special_volunteer_get():
     return render_template('zvms/volunteer/create_special.html')
 
@@ -221,6 +223,7 @@ def special_volunteer_helper(
 
 @zvms_route(Volunteer, url.create.special)
 @login_required
+@permission(Permission.MANAGER | Permission.AUDITOR)
 def create_special_volunteer(
     name: lengthedstr[32],
     type: VolType,
@@ -314,7 +317,7 @@ def modify_volunteer_get(volid: int):
 
 @zvms_route(Volunteer, url['volid'].modify.special)
 @login_required
-@permission(Permission.MANAGER)
+@permission(Permission.MANAGER | Permission.AUDITOR)
 def modify_volunteer_special(
     volid: int,
     name: lengthedstr[32],

@@ -94,7 +94,7 @@ def list_notices() -> list[tuple[
             'JOIN user ON user.userid = notice.sender '
             'WHERE {} '
             'ORDER BY notice.id DESC'.format(
-                'TRUE' if Permission.ADMIN.authorized() else 'notice.sender = :sender'
+                'notice.sender <> 0' if Permission.ADMIN.authorized() else 'notice.sender = :sender'
             ),
             sender=session.get('userid')
         ).fetchall()

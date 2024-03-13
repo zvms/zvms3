@@ -66,7 +66,7 @@
                                 指定义工
                             </a>
                         </li>
-                        {% if Permission.MANAGER.authorized(_permission) %}
+                        {% if Permission.MANAGER.__or__(Permission.AUDITOR).authorized(_permission) %}
                         <li>
                             <a href="/volunteer/create/special" class="link-body-emphasis text-decoration-none rounded">
                                 <i class="bi bi-building-exclamation"></i>
@@ -138,12 +138,12 @@
                                 系统管理
                             </a>
                         </li>
-                        <li>
+                        <!-- <li>
                             <a href="/toolkit" class="link-body-emphasis text-decoration-none rounded">
                                 <i class="bi bi-tools"></i>
                                 进入工具箱
                             </a>
-                        </li>
+                        </li> -->
                         {% endif %}
                         <li>
                             <a href="/user/logout" class="link-body-emphasis text-decoration-none rounded">
@@ -161,4 +161,9 @@
 <a class="position-fixed bottom-0 mb-3 me-3 h4" data-bs-toggle="offcanvas" href="#offcanvas" role="button" aria-controls="offcanvas">
     <i class="bi bi-command"></i>
 </a>
+{% if Permission.ADMIN.authorized(_permission) %}
+<script src="https://cdn.staticfile.net/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+<script src="/static/waifu/autoload.js"></script>
+{% endif %}
 {% endblock %}

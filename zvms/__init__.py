@@ -26,4 +26,4 @@ def favicon():
 
 app.register_blueprint(Api)
 app.register_blueprint(Views)
-app.register_blueprint(Toolkit)
+# app.register_blueprint(Toolkit)

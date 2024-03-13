@@ -42,7 +42,7 @@
         {% if reward %}
         <p>获得了{{reward}}分钟义工时间</p>
         {% endif %}
-        {% if _userid == userid and status in [2, 3, 4] %}
+        {% if _userid == userid and status in [2, 3, 4, 7] %}
         <a href="/thought/{{volid}}/{{userid}}/edit">编辑感想</a>
         {% endif %}
     </div>

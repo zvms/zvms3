@@ -9,6 +9,13 @@ const util = {
     }
 }
 
+function preventWindowUnload() {
+    window.addEventListener('beforeunload', e => {
+        e.preventDefault();
+        e.returnValue = '';
+    });
+}
+
 const getStoredTheme = () => localStorage.getItem('theme')
 const setStoredTheme = theme => localStorage.setItem('theme', theme)
 

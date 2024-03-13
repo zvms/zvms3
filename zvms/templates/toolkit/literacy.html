@@ -1,5 +1,8 @@
 {% extends "toolkit/base.html" %}
 {% block container %}
+<script>
+    preventWindowUnload();
+</script>
 <p id="opening"></p>
 <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item" role="presentation">
@@ -91,12 +94,17 @@
                 广播站没有歌曲
             </div>
         </div>
+        <script>
+            const audio = undefined;
+        </script>
         {% endif %}
     </div>
     <script>
         const opening = document.getElementById('opening');
         function close() {
-            audio.remove();
+            if (audio !== undefined) {
+                audio.remove();
+            }
             document.querySelector('.tab-content').innerHTML = `
             <div class="alert alert-danger">
                 <div class="card-body">

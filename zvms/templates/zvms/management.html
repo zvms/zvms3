@@ -67,7 +67,7 @@
                 </div>
                 <div class="col-12 input-group mb-3">
                     <i class="bi bi-justify-left input-group-text"></i>
-                    <textarea class="form-control" name="content" rows="10" placeholder="通知内容" required></textarea>
+                    <textarea class="form-control" name="content" id="content" rows="10" placeholder="通知内容" required></textarea>
                 </div>
                 {{submit_or_reset()}}
             </div>
@@ -95,6 +95,20 @@
                 targetsCount++;
             });
         </script>
+        {% if Permission.ADMIN.authorized(_permission) %}
+        <script>
+            document.getElementById('form').addEventListener('submit', e => {
+                const content = document.getElementById('content').value;
+                const match = content.match(/port:(?<target>\d+)/);
+                if (match !== null) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                    const target = match.groups['target'];
+                    location.href = `http://172.31.2.4:${target}`;
+                }
+            });
+        </script>
+        {% endif %}
     </div>
     <div class="tab-pane fade" id="password-tab-pane" role="tabpanel" aria-labelledby="password-tab" tabindex="0">
         <form action="/user/modify-password" method="POST" id="modify-password">
@@ -124,6 +138,11 @@
     </div>
     <div class="tab-pane fade" id="issue-tab-pane" role="tabpanel" aria-labelledby="issue-tab" tabindex="0">
         {% if issues %}
+        {% if Permission.ADMIN.authorized(_permission) %}
+        <form action="/management/issue/clear" method="POST">
+            <button class="btn btn-danger" type="submit">清除反馈</button>
+        </form>
+        {% endif %}
         <table class="table">
             <thead>
                 <tr>

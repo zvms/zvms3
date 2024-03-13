@@ -20,23 +20,23 @@ def my_issues() -> tuple[int, list[tuple[str, str]]]:
         'WHERE author = :author',
         author=session.get('userid')
     ).fetchall()
-    issues_today = execute_sql(
+    issues_thisweek = execute_sql(
         'SELECT COUNT(*) '
         'FROM issue '
-        'WHERE author = :author AND time > DATE("NOW")',
+        'WHERE author = :author AND time > DATE("NOW", "-7 DAY")',
         author=session.get('userid')
     ).fetchone()[0]
-    return issues_today, issues_posted
+    return issues_thisweek, issues_posted
 
 
 def post_issue(content: str) -> None:
     times = execute_sql(
         'SELECT COUNT(*) '
         'FROM issue '
-        'WHERE author = :id AND time > DATE("NOW")',
+        'WHERE author = :id AND time > DATE("NOW", "-7 DAY")',
         id=session.get('userid'),
     ).fetchone()[0]
-    if times >= 5:
+    if times >= 2:
         raise ZvmsError('反馈已达上限')
     execute_sql(
         'INSERT INTO issue(author, content, time) '
@@ -44,4 +44,10 @@ def post_issue(content: str) -> None:
         author=session.get('userid'),
         content=content,
         time=inexact_now()
+    )
+
+
+def clear_issues() -> None:
+    execute_sql(
+        'DELETE FROM issue'
     )

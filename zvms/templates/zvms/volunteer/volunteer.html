@@ -20,7 +20,7 @@
         </p>
     </div>
     <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-        {% if Permission.CLASS.authorized(_permission) and status == 1 %}
+        {% if can_audit %}
         <form action="/volunteer/{{id}}/audit" method="POST">
             <input type="hidden" name="status" value="2">
             <button class="btn btn-primary" type="submit">通过义工</button>
@@ -30,7 +30,7 @@
             <button class="btn btn-danger" type="submit">打回义工</button>
         </form>
         {% endif %}
-        {% if holderid == _userid or Permission.MANAGER.authorized(_permission) and status != 2 %}
+        {% if (holderid == _userid or Permission.ADMIN.authorized(_permission) or Permission.MANAGER.authorized(_permission)) %}
         <a class="btn btn-primary" href="/volunteer/{{id}}/modify" role="button">修改</a>
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">
             删除
@@ -65,11 +65,26 @@
             {% if thought_visible %}
             &nbsp;<a href="/thought/{{id}}/{{participantid}}">查看感想</a>
             {% endif %}
-            {% if participantid == _userid or Permission.CLASS.authorized(_permission) %}
-            <form action="/volunteer/{{id}}/signup/rollback" method="POST">
-                <input type="hidden" name="userid" value="{{participantid}}">
-                <button class="btn btn-danger" type="submit">撤回报名</button>
-            </form>
+            {% if participantid == _userid %}
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rollback-signup-{{id}}">
+                撤回报名
+            </button>
+            <div class="modal fade" id="rollback-signup-{{id}}" tabindex="-1" aria-labelledby="rollback-signup-{{id}}-label" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <p>真的要撤回吗?</p>
+                            <p>若是已通过的感想, 义工时间将会被清除</p>
+                        </div>
+                        <form action="/volunteer/{{id}}/signup/rollback" method="POST">
+                            <input type="hidden" name="userid" value="{{participantid}}">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                                <button type="submit" class="btn btn-danger">确认</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             {% endif %}
         </li>
         {% endfor %}

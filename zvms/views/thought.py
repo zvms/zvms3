@@ -75,7 +75,7 @@ def list_thoughts(page: int = 0):
     return select_thoughts(
         ThoughtKernel.list_thoughts(page),
         page,
-        '/thought/list'
+        '/thought/list?'
     )
 
 
@@ -85,7 +85,7 @@ def my_thoughts(page: int = 0):
     return select_thoughts(
         ThoughtKernel.my_thoughts(page),
         page,
-        '/thought/me'
+        '/thought/me?'
     )
 
 
@@ -96,7 +96,7 @@ def unaudited_thoughts(page: int = 0):
     return select_thoughts(
         ThoughtKernel.unaudited_thoutghts(page),
         page,
-        '/thought/unaudited'
+        '/thought/unaudited?'
     )
 
 
